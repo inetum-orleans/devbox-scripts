@@ -6,7 +6,8 @@ Le démarrage des projets avec la devbox nécessite de lancer plusieurs commande
 - ouverture d'un autre terminal pour lancer des commandes sur le projet, comme les `composer require ...` et autres `npm install`
 - ouverture d'un terminal pour lancer `mutagen sync monitor <sync id>` pour voir l'état de synchronisation.
 
-Les scripts node.js de ce repository permettent de lancer toutes ces commandes rapidement afin d'optimiser le lancement d'un projet de la devbox. Il est également possible de lancer ces scripts sous la forme de raccourcis windows afin de pouvoir démarrer nimporte quel projet en deux clics.
+Les scripts node.js de ce repository permettent de lancer toutes ces commandes rapidement afin d'optimiser le lancement d'un projet de la devbox. Il est également possible de lancer ces scripts sous la forme de raccourcis windows afin de pouvoir démarrer n'importe quel projet en deux clics sous cette forme :
+![three_consoles.png](captures/three_consoles.png)
 # 1. Pré-requis
 
 - La Devbox avec Vagrant+Virtualbox doit déjà être configurée sur votre poste, selon la procédure donnée dans le readme de [docker-devbox-vagrant](https://github.com/inetum-orleans/docker-devbox-vagrant/tree/master).
@@ -20,7 +21,7 @@ Rendez vous dans votre workspace, par exemple `C:\workspace` puis lancer les com
 
 ```
 git clone git@github.com:inetum-orleans/devbox-scripts.git OU git clone https://github.com/inetum-orleans/devbox-scripts.git
-cd INETUM-devbox-scripts
+cd INETUM-devbox-scriptscd
 cp variables.example.mjs variables.mjs
 ```
 
@@ -32,12 +33,13 @@ Il est possible de paramétrer le dossier contenant vos projets ou votre devbox 
 Vous avez la possibilité de créer un raccourci en mode "sélecteur de projet" ou alors de faire un raccourci par projet.
 
 Afin de créer un raccourci vers le sélecteur de projet, copiez le chemin d'accès du fichier `openWt.mjs` en faisant SHIFT + clic droit sur le fichier > copier en tant que chemin d'accès.
-
+![copy_as_path.png](captures/copy_as_path.png)
 Ensuite, créez un raccourci, où désiré, avec comme cible `node` suivi du chemin copié précédemment en argument, comme ceci :
 
 ```
-node "C:\workspace\INETUM-devbox-scripts\openWt.mjs"
+node "C:\workspace\devbox-scripts\openWt.mjs"
 ```
+![project_selector_shortcut.png](captures/project_selector_shortcut.png)
 
 Il ne reste plus qu'à saisir un nom pour votre raccourci.
 
@@ -46,19 +48,21 @@ Il ne reste plus qu'à saisir un nom pour votre raccourci.
 Même procédure que pour le générique, mais il faut ajouter le chemin vers le répertoire du projet voulu en second argument comme ceci :
 
 ```
-node "C:\workspace\INETUM-devbox-scripts\openWt.mjs" "C:\workspace\projects\NOM_DU_PROJET"
+node "C:\workspace\devbox-scripts\openWt.mjs" "C:\workspace\projects\NOM_DU_PROJET"
 ```
+
+![specific_project_shortcut.png](captures/specific_project_shortcut.png)
 
 De la  même manière que pour le project-selector, il faut saisir un nom pour votre raccourci et valider.
 
 **Options possibles pour le raccourci :** 
 - Changer la couleur de l'onglet
 ```
-node "C:\workspace\INETUM-devbox-scripts\openWt.mjs" --color "#40FF75" "C:\workspace\projects\NOM_DU_PROJET"
+node "C:\workspace\devbox-scripts\openWt.mjs" --color "#40FF75" "C:\workspace\projects\NOM_DU_PROJET"
 ```
 - Avoir un quatrième terminal
 ```
-node "C:\workspace\INETUM-devbox-scripts\openWt.mjs" --4-terminals "C:\workspace\projects\NOM_DU_PROJET"
+node "C:\workspace\devbox-scripts\openWt.mjs" --4-terminals "C:\workspace\projects\NOM_DU_PROJET"
 ```
 
 Windows utilise par défaut le logo de node.js. Vous pouvez le changer en faisant clic droit > "propriétés" et en définissant une nouvelle icône au format .ico.
@@ -66,9 +70,16 @@ Windows utilise par défaut le logo de node.js. Vous pouvez le changer en faisan
 
 # Problèmes connus
 
+## La console contenant le mutagen `mutagen sync monitor` défile beaucoup :
+Le problème semble venir de la résolution d'écran, car si le windows terminal est déplacé sur un écran externe, le problème disparaît. Vous pouvez créer un profil spécifique au terminal dédié à mutagen et réduire la taille de la police de ce profil à 9 afin de ne plus avoir le problème.
+![mutagen_console_font_size.png](captures/mutagen_console_font_size.png)
+Une fois le profil créé, il est nécessaire de modifier la variable concernée dans le fichier openWt.mjs avec le bon nom de profil.
+Voici le résultat :
+![mutagen_console.png](captures/mutagen_console.png)
+
 ## Le raccourci ouvre une nouvelle fenêtre windows terminal, je voudrais tout avoir en onglets :
 C'est possible, c'est juste de la configuration de Windows Terminal. Il faut sélectionner "Joindre à la fenêtre la plus récemment utilisée".
-
+![join_to_windowTerminal.png](captures/join_to_windowTerminal.png)
 ## 'ssh' n'est pas reconnu en tant que commande interne ou externe :
 
 Il faut installer OpenSSH Client sur Windows. Pour cela, ouvrez un Powershell en tant qu'administrateur et tapez la commande suivante :
