@@ -21,7 +21,7 @@ Rendez vous dans votre workspace, par exemple `C:\workspace` puis lancer les com
 
 ```
 git clone git@github.com:inetum-orleans/devbox-scripts.git OU git clone https://github.com/inetum-orleans/devbox-scripts.git
-cd INETUM-devbox-scriptscd
+cd devbox-scripts
 cp variables.example.mjs variables.mjs
 ```
 
