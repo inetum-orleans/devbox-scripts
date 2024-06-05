@@ -70,17 +70,8 @@ const scriptFolder = path.dirname(fileURLToPath(import.meta.url));
 try {
     execSync(`ssh -o ConnectTimeout=2 -q ${devboxSsh}`)
 } catch (e) {
-    console.log('Vagrant n\'est pas démarré, lancement de vagrant up')
-    execSync('vagrant up', { stdio: 'inherit', cwd: devboxFolder })
-    let sshIsUp = false;
-    while(!sshIsUp) {
-        console.log('En attente du démarrage de la machine')
-        try {
-            execSync(`ssh -q ${devboxSsh}`)
-            sshIsUp = true;
-        } catch (ex) {
-        }
-    }
+    console.log('Devbox non démarrée, démarrage')
+    execSync(`"${process.execPath}" startVM.mjs`, { stdio: 'inherit', cwd: scriptFolder })
 }
 
 let projectPath;
