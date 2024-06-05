@@ -2,6 +2,7 @@
  * Ouvre Windows Terminal avec 3 (ou 4) panneaux
  *
  * CHANGELOG:
+ * 4.0.0 : Chargement de la machine virtuelle avec un VBoxManage pour aller plus vite qu'un vagrant up (ne fait plus les mises à jour automatiquement au démarrage)
  * 3.2.0 : Refactorisation du chargement des variables, seules les variables surchargées ont besoin d'être dans variables.mjs
  * 3.1.0 : Variabilisation des noms des profils de terminaux
  * 3.0.0 : Changement de la syntaxe des arguments pour utiliser le module node:util/parseArgs
@@ -74,17 +75,8 @@ const scriptFolder = path.dirname(fileURLToPath(import.meta.url));
 try {
     execSync(`ssh -o ConnectTimeout=2 -q ${devboxSsh}`)
 } catch (e) {
-    console.log('Vagrant n\'est pas démarré, lancement de vagrant up')
-    execSync('vagrant up', { stdio: 'inherit', cwd: devboxFolder })
-    let sshIsUp = false;
-    while(!sshIsUp) {
-        console.log('En attente du démarrage de la machine')
-        try {
-            execSync(`ssh -q ${devboxSsh}`)
-            sshIsUp = true;
-        } catch (ex) {
-        }
-    }
+    console.log('Devbox non démarrée, démarrage')
+    execSync(`"${process.execPath}" startVM.mjs`, { stdio: 'inherit', cwd: scriptFolder })
 }
 
 let projectPath;
