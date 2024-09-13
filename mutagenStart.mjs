@@ -3,7 +3,10 @@
  */
 import path from 'node:path'
 import { execSync } from 'node:child_process'
-import { allProjectsFolder, devboxSsh } from './variables.mjs'
+import * as defaultVariables from './variables.default.mjs'
+import * as variables from './variables.mjs'
+
+const { allProjectsFolder, devboxSsh } = { ...defaultVariables, ...variables }
 
 if(process.argv.length <= 2) {
     console.error('Vous devez spécifier un nom de projet')

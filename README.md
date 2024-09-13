@@ -17,17 +17,28 @@ Les scripts node.js de ce repository permettent de lancer toutes ces commandes r
 
 # 2. Installation
 
-Rendez vous dans votre workspace, par exemple `C:\workspace` puis lancer les commandes suivantes :
+Rendez vous dans votre workspace, par exemple `C:\workspace` puis lancer les commandes suivantes (de préférence depuis un git bash, voir note ci-dessous) :
 
 ```
 git clone git@github.com:inetum-orleans/devbox-scripts.git OU git clone https://github.com/inetum-orleans/devbox-scripts.git
 cd devbox-scripts
-cp variables.example.mjs variables.mjs
+echo "export {}" > variables.mjs
 ```
+
+NOTE: si vous utilisez un cmd ou powershell, la dernière commande va créer le fichier en UTF-16, il faut le convertir en UTF-8 pour que le script fonctionne correctement. C'est plus simple de créer le fichier à la main et de mettre `export {}` dedans.
 
 ## Paramétrage
 
-Il est possible de paramétrer le dossier contenant vos projets ou votre devbox avec le fichier `variables.mjs`.
+Il est possible de surcharger les variables exposées du fichier `variables.default.mjs` dans le fichier `variables.mjs`.
+
+Exemple de fichier `variables.mjs` (pour résoudre le problème de défilement, voir "Problèmes connus" ci-dessous:
+```js
+// Pour le profil 3, il est fortement recommandé de créer un nouveau profil avec une taille de police réduite (<=9) pour que le texte ne défile pas sur un petit écran.
+const profile3 = 'small cmd'
+export {
+    profile3,
+}
+```
 
 # 3. Création d'un raccourci sur le bureau
 Vous avez la possibilité de créer un raccourci en mode "sélecteur de projet" ou alors de faire un raccourci par projet.
@@ -73,7 +84,7 @@ Windows utilise par défaut le logo de node.js. Vous pouvez le changer en faisan
 ## La console contenant le mutagen `mutagen sync monitor` défile beaucoup :
 Le problème semble venir de la résolution d'écran, car si le windows terminal est déplacé sur un écran externe, le problème disparaît. Vous pouvez créer un profil spécifique au terminal dédié à mutagen et réduire la taille de la police de ce profil à 9 afin de ne plus avoir le problème.
 ![mutagen_console_font_size.png](captures/mutagen_console_font_size.png)
-Une fois le profil créé, il est nécessaire de modifier la variable concernée dans le fichier openWt.mjs avec le bon nom de profil.
+Une fois le profil créé, il est nécessaire de surcharger la variable `profile3` concernée dans le fichier variables.mjs avec le bon nom de profil.
 Voici le résultat :
 ![mutagen_console.png](captures/mutagen_console.png)
 
