@@ -2,6 +2,7 @@
  * Ouvre Windows Terminal avec 3 (ou 4) panneaux
  *
  * CHANGELOG:
+ * 3.2.0 : Refactorisation du chargement des variables, seules les variables surchargées ont besoin d'être dans variables.mjs
  * 3.1.0 : Variabilisation des noms des profils de terminaux
  * 3.0.0 : Changement de la syntaxe des arguments pour utiliser le module node:util/parseArgs
  * 2.3.0 : Ajout d'un fichier variables.mjs qui gère les variables d'environnement
@@ -15,7 +16,10 @@ import { promisify, parseArgs } from 'node:util'
 import { stdin as input, stdout as output } from 'node:process'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { devboxSsh, devboxFolder, allProjectsFolder, profile1, profile2, profile3, profile4 } from './variables.mjs';
+import * as defaultVariables from './variables.default.mjs'
+import * as variables from './variables.mjs'
+
+const { devboxSsh, devboxFolder, allProjectsFolder, profile1, profile2, profile3, profile4 } = { ...defaultVariables, ...variables }
 
 const options = {
     color: {
