@@ -20,7 +20,8 @@ import { fileURLToPath } from 'node:url'
 import * as defaultVariables from './variables.default.mjs'
 import * as variables from './variables.mjs'
 
-const { devboxSsh, devboxFolder, allProjectsFolder, profile1, profile2, profile3, profile4 } = { ...defaultVariables, ...variables }
+const config = { ...defaultVariables, ...variables }
+const { devboxSsh, allProjectsFolder, windowsTerminalLayoutBuilder, windowsTerminalCommandsBuilder } = config
 
 const options = {
     color: {
@@ -60,6 +61,7 @@ if (args.length > 1 && !args.some(arg => arg.startsWith('-'))) {
     execSync('pause', { stdio: 'inherit' });
 }
 
+/** @type {{ values: OpenWtArguments, positionals: string[]}} */
 const { positionals, values } = parseArgs({
     args,
     options,
@@ -99,27 +101,15 @@ if(positionals.length > 0) {
 
 const relativeProjectPath = path.join(path.relative(allProjectsFolder, projectPath), values.workdir ?? '').replaceAll('\\', '/');
 
-// Vous pouvez configurer les commandes qui sont exécutées dans chacun des terminaux
-const term1Command = `ssh ${devboxSsh} -t "sleep 3\\;cd /home/vagrant/projects/${relativeProjectPath}\\; bash --login"` // sleep 3: smartcd supporte mal d'être lancé deux fois en parallèle...
-const term2Command = `ssh ${devboxSsh} -t "cd /home/vagrant/projects/${relativeProjectPath}\\; bash --login"`
-const term3Command = `node mutagenStart.mjs ${path.basename(projectPath)}`
-const term4Command = `ssh ${devboxSsh} -t "sleep 6\\;cd /home/vagrant/projects/${relativeProjectPath}\\; bash --login"` // sleep 6: smartcd supporte mal d'être lancé deux fois en parallèle... Alors 3 fois...
-
-const commonParams = ['--title', relativeProjectPath, '--suppressApplicationTitle', '--tabColor', values.color]
-
-const terminalArguments = [
-    // -M : Lancement maximisé
-    // Premier terminal, celui de gauche, pour le projet
-    '-M', ...commonParams, '-d', devboxFolder, '-p', profile1, 'cmd', '/k', term1Command, ';',
-    // Deuxième terminal, splitté verticalement, celui en haut à droite. Lance le vagrant ssh dans le bon dossier
-    'sp', ...commonParams, '-V', '-d', devboxFolder, '-p', profile2, 'cmd', '/k', term2Command, ';',
-    // Troisième terminal, splitté horizontalement, celui en bas à droite. Lance mutagen sync monitor
-    'sp', ...commonParams, '-H', '-d', scriptFolder, '-p', profile3, 'cmd', '/k', term3Command, ';',
-    // Donne le focus sur le terminal de gauche
-    'mf', 'left',
-];
-
-if(values['4-terminals'] === true) {
-    terminalArguments.push(...[';', 'sp', ...commonParams, '-H', '-d', devboxFolder, '-p', profile4, 'cmd', '/k', term4Command, ';', 'mf', 'up'])
+/** @type {OpenWtCommandContext} */
+const context = {
+    config,
+    args: values,
+    projectPath,
+    relativeProjectPath,
 }
+
+const commands = windowsTerminalCommandsBuilder(context);
+const terminalArguments = windowsTerminalLayoutBuilder(commands, context);
+
 spawn('wt', terminalArguments, { detached: true, stdio: 'inherit' }).unref()
