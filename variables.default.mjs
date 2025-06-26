@@ -28,13 +28,14 @@ const profile4 = 'Command Prompt'
 function windowsTerminalCommandsBuilder(context) {
     /** @type OpenWtCommandDescription[] */
     const commands = [];
+    const startInFolderCommand = sshCommand(`cd /home/vagrant/projects/${context.relativeProjectPath};bash --login`, context);
+
     commands.push({
-        // sleep 3: smartcd supporte mal d'être lancé deux fois en parallèle...
-        command: sshCommand(`sleep 3;cd /home/vagrant/projects/${context.relativeProjectPath};bash --login`, context),
+        command: startInFolderCommand,
         profile: context.config.profile1,
     });
     commands.push({
-        command: sshCommand(`cd /home/vagrant/projects/${context.relativeProjectPath}; bash --login`, context),
+        command: startInFolderCommand,
         profile: context.config.profile2,
     });
     commands.push({
@@ -43,8 +44,7 @@ function windowsTerminalCommandsBuilder(context) {
     });
     if (context.args['4-terminals']) {
         commands.push({
-            // sleep 6: smartcd supporte mal d'être lancé deux fois en parallèle... Alors 3 fois...
-            command: sshCommand(`sleep 6;cd /home/vagrant/projects/${context.relativeProjectPath}; bash --login`, context),
+            command: startInFolderCommand,
             profile: context.config.profile4,
         });
     }
