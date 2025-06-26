@@ -1,5 +1,5 @@
 declare type OpenWtArguments = {
-    color: string,
+    color?: string,
     '4-terminals'?: boolean,
     workdir?: string
 }

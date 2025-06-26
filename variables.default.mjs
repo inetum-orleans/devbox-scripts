@@ -14,11 +14,11 @@ const vBoxManageExe = 'C:\\Program Files\\Oracle\\VirtualBox\\VBoxManage.exe'
 
 // Les profils WindowsTerminal à utiliser pour chacun des 4 terminaux (1:gauche, 2:haut à droite, 3: bas à droite, 4: bas à gauche (si découpe en 4))
 // Cela vous permet de configurer un thème de couleurs, des images de fond d'écran personnalisées... à vous de jouer avec la configuration windows terminal.
-const profile1 = 'Command Prompt'
-const profile2 = 'Command Prompt'
+let profile1 = 'Command Prompt'
+let profile2 = 'Command Prompt'
 // Pour le profil 3, il est fortement recommandé de créer un nouveau profil avec une taille de police réduite (<=9) pour que le texte ne défile pas sur un petit écran.
-const profile3 = 'Command Prompt'
-const profile4 = 'Command Prompt'
+let profile3 = 'Command Prompt'
+let profile4 = 'Command Prompt'
 
 /**
  * 

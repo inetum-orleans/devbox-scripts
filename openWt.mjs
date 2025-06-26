@@ -12,8 +12,8 @@
  */
 import { execSync, spawn } from 'node:child_process'
 import { readdirSync, realpathSync } from 'node:fs'
-import * as readline from 'node:readline'
-import { promisify, parseArgs } from 'node:util'
+import * as readline from 'node:readline/promises'
+import { parseArgs } from 'node:util'
 import { stdin as input, stdout as output } from 'node:process'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -23,6 +23,9 @@ import * as variables from './variables.mjs'
 const config = { ...defaultVariables, ...variables }
 const { devboxSsh, allProjectsFolder, windowsTerminalLayoutBuilder, windowsTerminalCommandsBuilder } = config
 
+/**
+ * @type {import('node:util').ParseArgsOptionsConfig}
+ */
 const options = {
     color: {
         type: 'string',
@@ -91,12 +94,16 @@ if(positionals.length > 0) {
         console.log(`${i}. ${projects[i].name}`)
     }
     const rl = readline.createInterface({ input, output })
-    const question = promisify(rl.question).bind(rl)
-    const projectNumber = parseInt(await question('Quel projet dois-je ouvrir ? '))
+    const projectNumber = parseInt(await rl.question('Quel projet dois-je ouvrir ? '))
     if (projectNumber >= 0 && projectNumber < projects.length) {
         projectPath = realpathSync(path.join(allProjectsFolder, projects[projectNumber].name))
     }
     rl.close();
+}
+
+if(!projectPath) {
+    console.error('Aucun projet sélectionné, veuillez relancer le script avec le chemin du projet à ouvrir en argument.');
+    process.exit(1);
 }
 
 const relativeProjectPath = path.join(path.relative(allProjectsFolder, projectPath), values.workdir ?? '').replaceAll('\\', '/');

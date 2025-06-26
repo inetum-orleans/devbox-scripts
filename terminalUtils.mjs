@@ -13,7 +13,11 @@ export function windowsTerminalLayoutBuilder(commands, context) {
     }
 
     const scriptFolder = path.dirname(fileURLToPath(import.meta.url));
-    const commonParams = ['--title', context.relativeProjectPath, '--suppressApplicationTitle', '--tabColor', context.args.color]
+    const commonParams = ['--title', context.relativeProjectPath, '--suppressApplicationTitle']
+    if (context.args.color) {
+        commonParams.push('--tabColor', context.args.color)
+    }
+
     const commandsArguments = commands.map(command => {
         return ['-d', command.startDirectory ?? scriptFolder, '-p', command.profile, 'cmd', '/k', command.command, ';']
     })
